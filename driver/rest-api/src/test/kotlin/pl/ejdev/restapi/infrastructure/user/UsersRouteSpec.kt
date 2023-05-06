@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.*
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.routing.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.koin.core.module.Module
@@ -28,6 +29,7 @@ object UsersRouteSpec : RouteSpec() {
     private val getAllUsersUseCase = mockk<GetAllUsersUseCase>()
     private val createUserUseCase = mockk<CreateUserUseCase>()
 
+    override val route: Route.() -> Unit = { users() }
     override val module: Module = module {
         single { getUserUseCase }
         single { getAllUsersUseCase }
@@ -40,7 +42,7 @@ object UsersRouteSpec : RouteSpec() {
         feature("User routes") {
             scenario("get users") {
                 coEvery { getAllUsersUseCase.handle(any()) } returns either { listOf(getUserQueryResult) }
-                request(module = { users() }) {
+                request {
                     get("/api/users") { headers { accept(Application.Json) } }.run {
                         status shouldBe OK
                         response<List<GetUserQueryResult>> {
@@ -59,7 +61,7 @@ object UsersRouteSpec : RouteSpec() {
             }
             scenario("get user by id") {
                 coEvery { getUserUseCase.handle(any()) } returns either { getUserQueryResult }
-                request(module = { users() }) {
+                request {
                     get("/api/users/1") { headers { accept(Application.Json) } }.run {
                         status shouldBe OK
                         response<GetUserQueryResult> {
@@ -76,7 +78,7 @@ object UsersRouteSpec : RouteSpec() {
             }
             scenario("create user") {
                 coEvery { createUserUseCase.handle(any()) } returns either { createUserQueryResult }
-                request(module = { users() }) {
+                request {
                     post("/api/users") {
                         headers { contentType(Application.Json) }
                         setBody(
