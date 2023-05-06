@@ -1,0 +1,26 @@
+plugins {
+    id 'io.ktor.plugin' version '2.3.0'
+    id "io.kotest"
+}
+
+mainClassName = "io.ktor.server.cio.EngineMain"
+
+def isDevelopment = project.ext.has("development")
+applicationDefaultJvmArgs = ["-Dio.ktor.development=$isDevelopment"]
+
+dependencies {
+    implementation "io.ktor:ktor-server-core-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-cio-jvm:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-config-yaml:$ktor_version"
+    testImplementation "io.mockk:mockk:${mockk_version}"
+
+    // DRIVER
+    api project(":driver:rest-api")
+    // DRIVEN
+    api project(":driven:postgres")
+    // DDD
+    implementation project(':application:adapters')
+    implementation project(':application:adapters:user')
+    implementation project(':application:adapters:order')
+}

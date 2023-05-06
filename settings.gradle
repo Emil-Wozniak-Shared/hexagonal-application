@@ -1,0 +1,17 @@
+rootProject.name = 'hexapp'
+include ':application'
+include ":driver"
+include ":driven"
+include ":driver:rest-api"
+include 'driven:postgres'
+findProject(':driven:postgres')?.name = 'postgres'
+include 'application:adapters'
+findProject(':application:adapters')?.name = 'adapters'
+include 'application:adapters:user'
+findProject(':application:adapters:user')?.name = 'user'
+include 'application:adapters:order'
+findProject(':application:adapters:order')?.name = 'order'
+include 'common'
+include 'common:error'
+findProject(':common:error')?.name = 'error'
+

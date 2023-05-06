@@ -1,0 +1,51 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.8.20" apply false
+    id "io.kotest" version "0.4.10" apply false
+}
+allprojects {
+    group = "pl.ejdev"
+    project.version = "1.0.0"
+}
+subprojects {
+    apply plugin: "kotlin"
+    repositories { mavenCentral() }
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "org.jetbrains.kotlin:kotlin-reflect"
+        implementation "io.arrow-kt:arrow-core:$arrow_version"
+        implementation "io.arrow-kt:arrow-fx-coroutines:$arrow_version"
+
+        testImplementation platform("org.junit:junit-bom:$junit_version")
+        testImplementation "org.junit.jupiter:junit-jupiter"
+    }
+
+    test { useJUnitPlatform() }
+    kotlin { jvmToolchain(11) }
+}
+subprojects.each {
+    configure(it) {
+        test {
+            useJUnitPlatform()
+        }
+        dependencies {
+            testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.2")
+            testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
+            testImplementation "io.kotest:kotest-assertions-core:$kotest_version"
+            testImplementation "io.insert-koin:koin-test:$koin_version"
+            testImplementation "io.insert-koin:koin-test-junit5:$koin_version"
+        }
+    }
+    if (it.path.contains(":adapters") || it.path.endsWith("application") || it.path.startsWith(":driver-ports")) {
+        configure(it) {
+            apply plugin: "kotlin"
+            jar { enabled = true }
+            dependencies {
+                api project(":common:error")
+                // KOIN
+                api("io.insert-koin:koin-ktor:$koin_version")
+                api("io.insert-koin:koin-core:$koin_version")
+                api("io.insert-koin:koin-core-ext:$koin_ext_version")
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+jar { enabled = true }
+dependencies {
+    implementation "io.ktor:ktor-server-core-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-auth-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-auth-jwt-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-cors-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-call-logging-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-metrics-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktor_version"
+    implementation "io.ktor:ktor-serialization-jackson-jvm:$ktor_version"
+    implementation "io.ktor:ktor-server-cio-jvm:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-config-yaml:$ktor_version"
+
+    api("io.insert-koin:koin-ktor:$koin_version")
+    api("io.insert-koin:koin-core:$koin_version")
+    api("io.insert-koin:koin-core-ext:$koin_ext_version")
+    testImplementation "io.ktor:ktor-server-test-host-jvm:$ktor_version"
+    testImplementation "io.ktor:ktor-client-core:$ktor_version"
+    testImplementation "io.mockk:mockk:${mockk_version}"
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit:1.8.20'
+
+    api project(":common:error") transitive false
+}

@@ -1,0 +1,15 @@
+jar { enabled = true }
+dependencies {
+    api("io.insert-koin:koin-ktor:$koin_version")
+    api("io.insert-koin:koin-core:$koin_version")
+    api("io.insert-koin:koin-core-ext:$koin_ext_version")
+
+    implementation "org.postgresql:postgresql:$postgres_version"
+    implementation "org.jetbrains.exposed:exposed-jdbc:$exposed_version"
+    implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
+    implementation "io.ktor:ktor-serialization-jackson-jvm:$ktor_version"
+
+    testImplementation("com.h2database:h2:2.1.214")
+
+    api project(':common:error')
+}

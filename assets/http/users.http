@@ -1,0 +1,18 @@
+### Get all users
+GET {{host}}/api/users
+
+### Get user with id 1
+GET {{host}}/api/users/{{user_id}}
+
+### Create user
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+  "username": "john.snow",
+  "firstName": "John",
+  "lastName": "Snow",
+  "email": "john.snow@westeron.com",
+  "roles": ["USER", "ANON"]
+}
+###

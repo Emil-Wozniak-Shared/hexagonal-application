@@ -1,0 +1,5 @@
+jar { enabled = true }
+dependencies {
+    api project(":driven:postgres")
+    api project(':driver:rest-api')
+}
