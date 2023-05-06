@@ -15,13 +15,13 @@ import io.ktor.server.testing.*
 import org.koin.core.context.startKoin
 import org.koin.test.KoinTest
 
-private fun Application.module() {
+private fun Application.module(module: Route.() -> Unit) {
     install(ContentNegotiation) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
         }
     }
-    routing { route("/api") { users() } }
+    routing { route("/api") { module() } }
 }
 
 private val mapper = jacksonObjectMapper()
@@ -29,16 +29,14 @@ internal suspend inline fun <reified T : Any> HttpResponse.response(check: T.() 
     .let { mapper.readValue<T>(it) }
     .let { check(it) }
 
-internal suspend fun request(testCase: suspend HttpClient.() -> Unit) {
+internal suspend fun request(module: Route.() -> Unit, testCase: suspend HttpClient.() -> Unit) {
     testApplication {
-        application { module() }
+        application { this.module(module) }
         testCase(client)
     }
 }
 
-abstract class RouteSpec(
-    body: FeatureSpec.() -> Unit = {}
-) : FeatureSpec(), KoinTest, RouteSpecRoot {
+abstract class RouteSpec(body: FeatureSpec.() -> Unit = {}) : FeatureSpec(), KoinTest, RouteSpecRoot {
     init {
         beforeSpec {
             startKoin {

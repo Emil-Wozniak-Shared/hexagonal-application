@@ -33,13 +33,14 @@ object UsersRouteSpec : RouteSpec() {
         single { getAllUsersUseCase }
         single { createUserUseCase }
     }
+
     init {
         val getUserQueryResult = GetUserQueryResult(1, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, STATUS, ROLES)
         val createUserQueryResult = CreateUserQueryResult(1, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, STATUS, ROLES)
         feature("User routes") {
             scenario("get users") {
                 coEvery { getAllUsersUseCase.handle(any()) } returns either { listOf(getUserQueryResult) }
-                request {
+                request(module = { users() }) {
                     get("/api/users") { headers { accept(Application.Json) } }.run {
                         status shouldBe OK
                         response<List<GetUserQueryResult>> {
@@ -58,7 +59,7 @@ object UsersRouteSpec : RouteSpec() {
             }
             scenario("get user by id") {
                 coEvery { getUserUseCase.handle(any()) } returns either { getUserQueryResult }
-                request {
+                request(module = { users() }) {
                     get("/api/users/1") { headers { accept(Application.Json) } }.run {
                         status shouldBe OK
                         response<GetUserQueryResult> {
@@ -75,7 +76,7 @@ object UsersRouteSpec : RouteSpec() {
             }
             scenario("create user") {
                 coEvery { createUserUseCase.handle(any()) } returns either { createUserQueryResult }
-                request {
+                request(module = { users() }) {
                     post("/api/users") {
                         headers { contentType(Application.Json) }
                         setBody(
