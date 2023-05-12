@@ -6,11 +6,8 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.*
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.server.routing.*
 import io.mockk.coEvery
 import io.mockk.mockk
-import org.koin.core.module.Module
-import org.koin.dsl.module
 import pl.ejdev.restapi.domain.user.entities.CreateUserQueryResult
 import pl.ejdev.restapi.domain.user.entities.GetUserQueryResult
 import pl.ejdev.restapi.domain.user.usecases.CreateUserUseCase
@@ -29,16 +26,15 @@ object UsersRouteSpec : RouteSpec() {
     private val getAllUsersUseCase = mockk<GetAllUsersUseCase>()
     private val createUserUseCase = mockk<CreateUserUseCase>()
 
-    override val route: Route.() -> Unit = { users() }
-    override val module: Module = module {
-        single { getUserUseCase }
-        single { getAllUsersUseCase }
-        single { createUserUseCase }
-    }
-
     init {
         val getUserQueryResult = GetUserQueryResult(1, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, STATUS, ROLES)
         val createUserQueryResult = CreateUserQueryResult(1, USERNAME, FIRST_NAME, LAST_NAME, EMAIL, STATUS, ROLES)
+        route { users() }
+        module {
+            single { getUserUseCase }
+            single { getAllUsersUseCase }
+            single { createUserUseCase }
+        }
         feature("User routes") {
             scenario("get users") {
                 coEvery { getAllUsersUseCase.handle(any()) } returns either { listOf(getUserQueryResult) }

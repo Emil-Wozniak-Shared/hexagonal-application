@@ -17,16 +17,27 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.test.KoinTest
 
-internal interface RouteSpecRoot {
-    val module: Module
-    val route: Route.() -> Unit
-}
 
 abstract class RouteSpec(body: RouteSpec.() -> Unit = {}) :
     FeatureSpec(),
     FeatureSpecRootScope,
-    RouteSpecRoot,
     KoinTest {
+
+    private var route: Route.() -> Unit = {
+        throw IllegalArgumentException("Please setup route")
+    }
+    private var module: Module = org.koin.dsl.module {
+        throw IllegalArgumentException("Please setup module")
+    }
+
+    fun route(builder: Route.() -> Unit) {
+        route = builder
+    }
+
+    fun module(builder: Module.() -> Unit) = org.koin.dsl.module {
+        builder(this)
+    }.let { module = it }
+
     private fun Application.module(module: Route.() -> Unit) {
         install(ContentNegotiation) {
             jackson {
@@ -52,7 +63,7 @@ abstract class RouteSpec(body: RouteSpec.() -> Unit = {}) :
     init {
         beforeSpec {
             startKoin {
-                modules(module)
+                this.modules(module)
             }
         }
         body()
