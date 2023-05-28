@@ -14,4 +14,6 @@ findProject(':application:adapters:order')?.name = 'order'
 include 'common'
 include 'common:error'
 findProject(':common:error')?.name = 'error'
+include 'driven:stmp'
+findProject(':driven:stmp')?.name = 'stmp'
 

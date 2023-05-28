@@ -1,0 +1,18 @@
+jar { enabled = true }
+ext {
+    simplekotlinmail_version = '1.4.0'
+}
+
+private def simpleKotlinMail(String module) {
+    dependencies { implementation("net.axay:simplekotlinmail-$module:$simplekotlinmail_version") }
+}
+
+dependencies {
+    api project(":common:error")
+    simpleKotlinMail "core"
+    simpleKotlinMail "client"
+    simpleKotlinMail "html"
+    implementation 'jakarta.mail:jakarta.mail-api:2.1.1'
+    implementation 'org.eclipse.angus:jakarta.mail:2.0.1'
+    testImplementation 'com.icegreen:greenmail:2.0.0'
+}

@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/common/error" />
             <option value="$PROJECT_DIR$/driven" />
             <option value="$PROJECT_DIR$/driven/postgres" />
+            <option value="$PROJECT_DIR$/driven/stmp" />
             <option value="$PROJECT_DIR$/driver" />
             <option value="$PROJECT_DIR$/driver/rest-api" />
           </set>

@@ -17,3 +17,8 @@ class MustBeNonNullError(
     override val error: String,
     override val message: String,
 ) : BaseError(error, message, 404)
+
+class EmailError(
+    override val error: String,
+    override val message: String,
+) : BaseError(error, message, 500)
